@@ -1,0 +1,77 @@
+﻿@model UserSearch.Models.IUser
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>User Search</h1>
+    <p class="lead">
+        Search for a user in source control by typing in the user's login and clicking Search.
+        You can see details of the user and their most popular repositories.
+    </p>
+</div>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+<p>
+    <b>Login Name:</b>
+    <input id="loginname"
+           name="loginname"
+           type="text"
+           @if (Model != null) { <text> value="@Model.Login" </text> ; }
+           pattern="[a-zA-Z0-9-]{1,39}"
+           title="Username may only contain alphanumeric characters or hyphens and cannot be longer than 39 characters"
+           />
+    <input type="submit" value="Search" />
+    <br />
+    @Html.ValidationMessageFor(m => m.Login)
+</p>
+}
+
+@if (Model != null && !string.IsNullOrEmpty(Model.Login))
+{
+    <br />
+    <h3>User Details</h3>
+    <div style="float:left;margin-right:10px">
+        <img src="@Url.Content($"{Model.AvatarUrl}.png")" width="50" />
+    </div>
+    <div>
+        <p><b>@Html.DisplayNameFor(model => model.Name):</b> @Html.DisplayFor(model => model.Name)</p>
+        <p><b>@Html.DisplayNameFor(model => model.Location):</b> @Html.DisplayFor(model => model.Location)</p>
+    </div>
+    if (Model.TopFiveMostPopularRepos != null && Model.TopFiveMostPopularRepos.Count > 0)
+    {
+        <br />
+        <h4>Top 5 Stargazer Count Repos</h4>
+        <table>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TopFiveMostPopularRepos.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TopFiveMostPopularRepos.FirstOrDefault().PopularityCount)
+                </th>
+            </tr>
+            @foreach (var item in Model.TopFiveMostPopularRepos)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.PopularityCount)
+                </td>
+            </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>This user does not have any repos</p>
+    }
+}
+else if (Model == null)
+{
+    <p>No user found, please try another login name</p>
+}
