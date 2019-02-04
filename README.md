@@ -1,6 +1,11 @@
 # UserSearch
 A generic source control user search solution with a repository implemented for searching for users via the github api
 
+## Deployed Instance
+You can see the app running and try it out by going to the following URL:
+
+https://usersearchwebapp.azurewebsites.net/
+
 ## Troubleshooting
 Note that when I clone the repo locally and try to run UserSearchWeb Web App I get an error like the following:
 
